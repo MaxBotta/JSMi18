@@ -18,10 +18,12 @@ const PI = 3.14; // Konstanter Wert (unveränderbar)
 
 // Javascript Object, Sehr praktisch um Information zu speichern
 let player = {
+  experience: 1024,
   username: "Gandalf10",
   life: 40,
   attack: 10,
   defense: 5,
+  friends: ["Max", "Damian", "Lea"],
   equipped: {
     weapon: 1903412,
   },
@@ -45,6 +47,8 @@ let player = {
     //...
   },
 };
+
+const playerName = player.username
 
 let monster = {
   life: 20,
