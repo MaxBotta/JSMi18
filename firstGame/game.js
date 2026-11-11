@@ -14,8 +14,25 @@ Todos:
 let playerX = 100;
 let playerY = 0;
 const playerSize = 40;
+const playerJump = -16;
 let playerVelocity = 0;
-const gravity = 0.3;
+
+const gravity = 0.8;
+
+const platforms = [
+  {
+    x: 20,
+    y: 400,
+    width: 400,
+    height: 30,
+  },
+  {
+    x: 400,
+    y: 500,
+    width: 200,
+    height: 60,
+  },
+];
 
 // Wird vor dem Start von draw ausgeführt (also am Anfang des Spiels)
 function setup() {
@@ -36,18 +53,42 @@ function draw() {
     playerY = 600 - playerSize;
   }
 
+  // Plattform (Für jedes Element in unsere Liste von Plattformen)
+  for (let platform of platforms) {
+    // Plattformen zeichnen
+    fill("green");
+    rect(platform.x, platform.y, platform.width, platform.height);
+
+    if (
+      playerY >= platform.y - playerSize &&
+      playerY <= platform.y + platform.height - playerSize &&
+      playerX + playerSize > platform.x &&
+      playerX < platform.x + platform.width &&
+      playerVelocity > 0
+    ) {
+      playerVelocity = 0;
+      playerY = platform.y - playerSize;
+    }
+  }
+
   // Spieler
   fill("yellow");
   square(playerX, playerY, playerSize);
 
-  fill("green");
-  rect(20, 540, 600, 20);
+  // Spieler nach links und rechts bewegen
+  if (keyIsDown(LEFT_ARROW)) {
+    playerX = playerX - 10;
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    playerX = playerX + 10;
+  }
 }
 
 function keyPressed() {
+  // Pfeiltaste oben, Spielergeschwindigkeit wird negativ
   if (keyCode === 38) {
-    console.log('press')
-    playerVelocity = -10
+    playerVelocity = playerJump;
   }
+
   return false; // prevent default
 }

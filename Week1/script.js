@@ -94,6 +94,11 @@ for(let i = 0; i < 10; i++) {
   console.log(total)
 }
 
+// Gehe durch alle Elemente in der numbers Liste (Etwas simplerre Schleife für Listen)
+for(let number of numbers) {
+  console.log(number)
+}
+
 
 // Funktionen
 function addTwoNumbers(number1, number2) {
