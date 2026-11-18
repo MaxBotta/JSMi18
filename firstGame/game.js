@@ -31,6 +31,8 @@ let jumpCount = DEFAULT_JUMP_COUNT;
 // Lister aller aktuellen Plattformen
 const platforms = [];
 
+const platformColors = ["red", "green", "blue"];
+
 // Wird vor dem Start von draw ausgeführt (also am Anfang des Spiels)
 function setup() {
   createCanvas(900, 600);
@@ -66,10 +68,12 @@ function keyPressed() {
 // Eigene Funktionen
 function spawnPlatformByInterval() {
   // Plattform spawnen, vergleiche aktuelle Zeit mit gestoppter Zeit plus spawn Zeit
-  if (millis() > currentMillis + spawnPlatformByInterval) {
+  if (millis() > currentMillis + platformSpawnTime) {
     currentMillis = millis();
 
     const platformHeight = random(20, 60);
+
+    console.log("test");
 
     // Neues Plattform Objekt
     const newPlatform = {
@@ -78,6 +82,7 @@ function spawnPlatformByInterval() {
       x: width,
       y: random(0, height - platformHeight),
       speed: random(2, 6),
+      color: platformColors[parseInt(random(0, 3))],
     };
 
     // Plattform in Liste einfügen
@@ -109,7 +114,7 @@ function movePlaformAndCheckCollsion() {
   // Plattform (Für jedes Element in unsere Liste von Plattformen)
   for (let platform of platforms) {
     // Plattformen zeichnen
-    fill("green");
+    fill(platform.color);
     rect(platform.x, platform.y, platform.width, platform.height);
 
     platform.x = platform.x - platform.speed;
