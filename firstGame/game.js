@@ -14,19 +14,18 @@ Todos:
 
 */
 
+// Globale Konstanten
+const DEFAULT_JUMP_COUNT = 2;
+const PLAYER_SIZE = 40;
+const PLAYER_JUMP_FORCE = -16;
+const GRAVITY = 0.8;
+
 let playerX = 100;
 let playerY = 0;
-const playerSize = 40;
-const playerJump = -16;
-let playerVelocity = 0;
-let playerRotation = 0;
-let isRotating = false;
+let playerVelocityY = 0;
+let jumpCount = DEFAULT_JUMP_COUNT;
 
-const jumpCountDefault = 2;
-let jumpCount = jumpCountDefault;
-
-const gravity = 0.8;
-
+// Lister aller aktuellen Plattformen
 const platforms = [
   {
     x: 20,
@@ -54,8 +53,6 @@ const platforms = [
 // Wird vor dem Start von draw ausgeführt (also am Anfang des Spiels)
 function setup() {
   createCanvas(900, 600);
-
-  angleMode(DEGREES);
 }
 
 // Gameloop (wiederholt sich die ganze Zeit, Framerate)
@@ -63,12 +60,12 @@ function draw() {
   background(0, 200, 250);
 
   // Spieler fällt wegen Gravitation
-  playerVelocity = playerVelocity + gravity;
-  playerY = playerY + playerVelocity;
+  playerVelocityY = playerVelocityY + GRAVITY;
+  playerY = playerY + playerVelocityY;
 
   // Wenn Spieler runter fällt soll er wieder respawnen
   if (playerY > 600) {
-    playerVelocity = 0;
+    playerVelocityY = 0;
     playerY = 0;
     playerX = 20;
   }
@@ -82,35 +79,27 @@ function draw() {
     platform.x = platform.x - platform.speed;
 
     if (
-      playerY >= platform.y - playerSize &&
-      playerY <= platform.y + platform.height - playerSize &&
-      playerX + playerSize > platform.x &&
+      playerY >= platform.y - PLAYER_SIZE &&
+      playerY <= platform.y + platform.height - PLAYER_SIZE &&
+      playerX + PLAYER_SIZE > platform.x &&
       playerX < platform.x + platform.width &&
-      playerVelocity > 0
+      playerVelocityY > 0
     ) {
       // Spieler steht auf Plattform
-      playerVelocity = 0;
-      playerY = platform.y - playerSize;
+      playerVelocityY = 0;
+      playerY = platform.y - PLAYER_SIZE;
 
       //Spieler mitbewegen
       // player.x = player.x - platform.speed;
 
       // Setze die Jumpcount wieder zurück
-      jumpCount = jumpCountDefault;
+      jumpCount = DEFAULT_JUMP_COUNT;
     }
   }
 
   // Spieler
   fill("yellow");
-  square(playerX, playerY, playerSize);
-
-  if (isRotating === true) {
-    playerRotation = playerRotation + 5;
-  }
-  if (playerRotation >= 360) {
-    playerRotation = 0;
-    isRotating = false;
-  }
+  square(playerX, playerY, PLAYER_SIZE);
 
   // Spieler nach links und rechts bewegen
   if (keyIsDown(LEFT_ARROW)) {
@@ -125,9 +114,7 @@ function keyPressed() {
   // Pfeiltaste oben, Spielergeschwindigkeit wird negativ, Spieler springt
   if (keyCode === 38 && jumpCount > 0) {
     jumpCount = jumpCount - 1;
-    playerVelocity = playerJump;
-
-    isRotating = true;
+    playerVelocityY = PLAYER_JUMP_FORCE;
   }
 
   return false; // prevent default
